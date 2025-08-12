@@ -27,6 +27,19 @@ Here’s an interesting conversation I had with Claude using this MCP Server. No
 
 https://claude.ai/share/4f1a6d83-7e64-48b3-9a96-839dc2781d11
 
+## MCP Server Config Example
+```
+    "mcp_server": {
+      "command": "D:\\source\\mcp-server\\bin\\Debug\\net8.0\\mcp-server.exe",
+	  "cwd": "D:\\source\\mcp-server\\bin\\Debug\\net8.0",
+      "args": [],
+      "env": {
+        "DOTNET_ENVIRONMENT": "Production",
+        "WEATHER_CHOICES": "sunny,humid,freezing"
+      }
+    }
+```
+
 ## See Also
 
 [7 MCP Server Best Practices for Scalable AI Integrations in 2025 - MarkTechPost](https://www.marktechpost.com/2025/07/23/7-mcp-server-best-practices-for-scalable-ai-integrations-in-2025/)
