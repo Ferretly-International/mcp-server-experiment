@@ -8,13 +8,15 @@ I needed to do the following in order to follow the instructions in this post:
 2. When connected to the MCP Inspector , prior to clicking Connect you need to copy the “Session token” provided in the console by MCP Inspector into the inspector’s Proxy Session Token property.
 
 In order to get the MCP Server to read its config properly when used in Claude, I had to change the configuration builder thusly:
-```
+```csharp
+var settingsPath = Environment.GetEnvironmentVariable("MCP_SERVER_SETTINGS_PATH");
+
 // Remove defaults (appsettings.json, env vars, command-line, etc.)
 builder.Configuration.Sources.Clear();
 
 // Add only what you want
 builder.Configuration
-    .AddJsonFile(@"D:\source\mcp-server\bin\Debug\net8.0\appsettings.json", optional: true, reloadOnChange: true)
+    .AddJsonFile(settingsPath, optional: false, reloadOnChange: true)
     .AddEnvironmentVariables()
     .AddCommandLine(args);
 ```
@@ -35,7 +37,8 @@ https://claude.ai/share/4f1a6d83-7e64-48b3-9a96-839dc2781d11
       "args": [],
       "env": {
         "DOTNET_ENVIRONMENT": "Production",
-        "WEATHER_CHOICES": "sunny,humid,freezing"
+        "WEATHER_CHOICES": "sunny,humid,freezing",
+        ""MCP_SERVER_SETTINGS_PATH": "<path to appSettings.json>"
       }
     }
 ```

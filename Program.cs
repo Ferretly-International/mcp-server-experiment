@@ -13,12 +13,15 @@ builder.Logging.AddConsole(consoleLogOptions =>
     consoleLogOptions.LogToStandardErrorThreshold = LogLevel.Trace;
 });
 
+var settingsPath = Environment.GetEnvironmentVariable("MCP_SERVER_SETTINGS_PATH");
+
 // Remove defaults (appsettings.json, env vars, command-line, etc.)
 builder.Configuration.Sources.Clear();
 
 // Add only what you want
 builder.Configuration
-    .AddJsonFile(@"D:\source\mcp-server\bin\Debug\net8.0\appsettings.json", optional: true, reloadOnChange: true)
+    .AddJsonFile(settingsPath,
+                  optional: false, reloadOnChange: true)
     .AddEnvironmentVariables()
     .AddCommandLine(args);
 
