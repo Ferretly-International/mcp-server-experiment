@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Server;
+using System.IO;
+using mcp_server;
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.Logging.AddConsole(consoleLogOptions =>
@@ -28,6 +30,31 @@ builder.Configuration
 
 //Display warnings and above only in console.
 builder.Logging.SetMinimumLevel(LogLevel.Warning);
+
+// Also log to a file located in the same folder as the settingsPath (if available)
+try
+{
+    var settingsDirectory = !string.IsNullOrWhiteSpace(settingsPath)
+        ? Path.GetDirectoryName(settingsPath)
+        : AppContext.BaseDirectory;
+
+    if (string.IsNullOrWhiteSpace(settingsDirectory))
+    {
+        settingsDirectory = AppContext.BaseDirectory;
+    }
+
+    Directory.CreateDirectory(settingsDirectory!);
+
+    var logFilePath = Path.Combine(settingsDirectory!, "mcp-server.log");
+    builder.Logging.AddProvider(new SimpleFileLoggerProvider(logFilePath));
+}
+catch (Exception ex)
+{
+    // If file logging setup fails, keep the app running and rely on console logging.
+    Console.Error.WriteLine($"Failed to initialize file logging: {ex.Message}");
+}
+
+builder.Services.AddHttpClient();
 
 builder.Services
     .AddMcpServer()
